@@ -14,7 +14,7 @@ Contributors: kekotron
 
 
 
-Tags: AI, openai, gpt, copywriting, chatgpt
+Tags: AI, quiz, SEO, gamify, chatgpt
 
 
 
