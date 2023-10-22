@@ -288,6 +288,10 @@ jQuery(document).ready(function($) {
 							numberWithCommas(data.user.n_quizs) +
 							"/" + data.user.n_quizs_sub + " quizs (Refill in " + data.user.next_payment + " days)";
 						ai_quiz_user = data.user;
+						//Update idiom
+						if(document.getElementById("ai-quiz-select-language")){
+							document.getElementById("ai-quiz-select-language").value = ai_quiz_user.idiom
+						}
 					}
 				},
 				error: function(err) {

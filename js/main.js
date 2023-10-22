@@ -10,7 +10,7 @@ jQuery(document).ready(function($) { $(function() {
 	$('#ai-quiz-choose-custom-btn').on('click', function(){
 		document.getElementById("ai-quiz-choose").style.display="none";
 		document.getElementById("ai-quiz-choose-custom").style.display="block";
-		document.getElementById("ai-quiz-choose-idiom-custom").innerHTML = ai_choose_language(ai_quiz_user.idiom);
+		document.getElementById("ai-quiz-choose-idiom-custom").innerHTML = ai_choose_language();
 	});
 	$('.ai-quiz-back-choose').on('click', function(){
 		document.getElementById("ai-quiz-choose-post").style.display="none";
@@ -221,6 +221,9 @@ jQuery(document).ready(function($) { $(function() {
 		}
 	}
 	function ai_choose_language(defaultLang = 'en_US'){
+		if( ai_quiz_user && 'idiom' in  ai_quiz_user){
+			defaultLang = ai_quiz_user.idiom;
+		}
 		var languages = {
 			'ar_SA': 'Arabic',
 			'bn_BD': 'Bengali',
@@ -248,7 +251,7 @@ jQuery(document).ready(function($) { $(function() {
 			(obj, key) => { 
 				obj[key] = languages[key]; 
 				return obj;
-			}, 
+			},
 			{}
 		);
 		var selectHTML = "<select id='ai-quiz-select-language'>";
@@ -275,7 +278,7 @@ jQuery(document).ready(function($) { $(function() {
 		  <h5 class="mt-4 mb-3">Create new quiz from post</h5>
 		  <b class="bold my-3">${post.post_title}</b>
 		  <p>Select idiom</p>
-		  ${ai_choose_language(ai_quiz_user.idiom)}
+		  ${ai_choose_language()}
 		  <button class="btn btn-primary mt-3" id="btn_create_quiz_post">Create Quiz</button>
 		  <div class="ai-quiz-loader" id="loader-new-quiz-post"></div>
 		  <div id="error_new_quiz_post"></div>
