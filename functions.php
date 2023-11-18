@@ -20,40 +20,100 @@ if (!function_exists('ai_quiz_stripAccents')) {
 	}
 }
 
-if (!function_exists('AutoQuiz_callAPI')){
-	function AutoQuiz_callAPI($method, $url, $data) {
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+if (!function_exists('ai_quiz_call_api')){
+	function ai_quiz_call_api($method, $url, $data) {
+		$args = array(
+			'method'    => $method,
+			'timeout'   => 45,
+			'redirection' => 5,
+			'httpversion' => '1.0',
+			'blocking'    => true,
+			'headers'     => array(),
+			'cookies'     => array()
+		);
 	
-		switch ($method) {
-			case "POST":
-			case "PUT":
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-	
-				// Comprueba si estamos enviando un archivo
-				if (isset($data['file']) && $data['file'] instanceof CURLFile) {
-					curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-				} else {
-					curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-				}
-				break;
-			default:
-				if ($data) {
-					$url = sprintf("%s?%s", $url, http_build_query($data));
-				}
+		if ($method == 'POST' || $method == 'PUT') {
+			$args['body'] = $data;
+			if (isset($data['file'])) {
+				// Ajusta aquí para manejar la subida de archivos si es necesario.
+			}
+		} else {
+			if (!empty($data)) {
+				$url = add_query_arg($data, $url);
+			}
 		}
 	
-		$response = curl_exec($ch);
+		$response = wp_remote_request($url, $args);
 	
-		if (!$response) {
-			die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+		if (is_wp_error($response)) {
+			$error_message = $response->get_error_message();
+			die("Algo salió mal: $error_message");
+		} else {
+			return wp_remote_retrieve_body($response);
 		}
-	
-		curl_close($ch);
-	
-		return $response;
 	}
-
+}
+if (!function_exists('ai_quiz_call_api2')){
+	function ai_quiz_call_api2($method, $url, $data) {
+		$args = array(
+			'method'    => $method,
+			'timeout'   => 45,
+			'redirection' => 5,
+			'httpversion' => '1.0',
+			'blocking'    => true,
+			'headers'     => array(),
+			'cookies'     => array()
+		);
+	
+		if ($method == 'POST' || $method == 'PUT') {
+			// Ajusta para la solicitud multipart/form-data
+			if (isset($data['file']) && is_array($data['file'])) {
+				$boundary = wp_generate_password(24);
+				$args['headers']['Content-Type'] = 'multipart/form-data; boundary=' . $boundary;
+				$payload = '';
+	
+				// Agrega los campos normales
+				foreach ($data as $key => $value) {
+					if ($key !== 'file') {
+						$payload .= '--' . $boundary;
+						$payload .= "\r\n";
+						$payload .= 'Content-Disposition: form-data; name="' . $key . '"' . "\r\n\r\n";
+						$payload .= $value;
+						$payload .= "\r\n";
+					}
+				}
+	
+				// Agrega el archivo
+				$file_path = $data['file']['tmp_name'];
+				$file_name = basename($data['file']['name']);
+				$file_type = $data['file']['type'];
+				$payload .= '--' . $boundary;
+				$payload .= "\r\n";
+				$payload .= 'Content-Disposition: form-data; name="file"; filename="' . $file_name . '"' . "\r\n";
+				$payload .= 'Content-Type: ' . $file_type . "\r\n\r\n";
+				$payload .= file_get_contents($file_path);
+				$payload .= "\r\n";
+				$payload .= '--' . $boundary . '--';
+	
+				$args['body'] = $payload;
+			} else {
+				$args['body'] = http_build_query($data);
+			}
+		} else {
+			if (!empty($data)) {
+				$url = add_query_arg($data, $url);
+			}
+		}
+	
+		$response = wp_remote_request($url, $args);
+	
+		if (is_wp_error($response)) {
+			$error_message = $response->get_error_message();
+			die("Algo salió mal: $error_message");
+		} else {
+			return wp_remote_retrieve_body($response);
+		}
+	}
 }
 if (!function_exists('ai_quiz_get_info')){
 
@@ -65,7 +125,7 @@ if (!function_exists('ai_quiz_get_info')){
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key')
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/get-info.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/get-info.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true, 'user' => $response['user']));
@@ -88,7 +148,7 @@ if (!function_exists('ai_quiz_get_settings')){
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key')
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/get-settings.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/get-settings.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true, 'user' => $response['user']));
@@ -110,7 +170,7 @@ if (!function_exists('ai_quiz_cancel_subscription')){
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key')
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/cancel_subscription.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/cancel_subscription.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true));
@@ -132,9 +192,9 @@ if (!function_exists('ai_quiz_get_promo')){
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
-				'promo' => $_POST['promo']
+				'promo' => sanitize_text_field(wp_strip_all_tags($_POST['promo']))
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/promotion.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/promotion.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true));
@@ -154,10 +214,10 @@ if (!function_exists('ai_quiz_update_question')){
 		global $wpdb;
 		$options_table_name = $wpdb->prefix . 'ai_quiz_options';
 		$questions_table_name = $wpdb->prefix . 'ai_quiz_questions';
-		$query = $wpdb->prepare("UPDATE $questions_table_name SET question = %s, explanation = %s WHERE id = %s", sanitize_text_field($question['question']), sanitize_text_field($question['explanation']), $question['id']);
+		$query = $wpdb->prepare("UPDATE $questions_table_name SET question = %s, explanation = %s WHERE id = %s", sanitize_text_field($question['question']), sanitize_text_field($question['explanation']), intval($question['id']));
 		$wpdb->query($query);
 		foreach ($question['options'] as $opt) {
-			$query = $wpdb->prepare("UPDATE $options_table_name SET answer = %s WHERE id = %s", sanitize_text_field($opt['answer']), $opt['id']);
+			$query = $wpdb->prepare("UPDATE $options_table_name SET answer = %s WHERE id = %s", sanitize_text_field($opt['answer']), intval($opt['id']));
 			$wpdb->query($query);
 		}
 		ai_quiz_return_json(array('exito' => true, 'question' => ai_quiz_get_question($question['id'])));
@@ -170,7 +230,7 @@ if (!function_exists('ai_quiz_update_question')){
 if (!function_exists('ai_quiz_delete_question')){
 
 	function ai_quiz_delete_question() {
-		$id = $_POST['id'];
+		$id = intval($_POST['id']);
 		global $wpdb;
 		$options_table_name = $wpdb->prefix . 'ai_quiz_options';
 		$questions_table_name = $wpdb->prefix . 'ai_quiz_questions';
@@ -187,7 +247,7 @@ if (!function_exists('ai_quiz_delete_question')){
 if (!function_exists('ai_quiz_delete_quiz')){
 
 	function ai_quiz_delete_quiz() {
-		$id = $_POST['id'];
+		$id = intval($_POST['id']);
 		global $wpdb;
 		$options_table_name = $wpdb->prefix . 'ai_quiz_options';
 		$questions_table_name = $wpdb->prefix . 'ai_quiz_questions';
@@ -221,10 +281,10 @@ if (!function_exists('ai_quiz_create_sub_link')){
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
-				'id' => $_POST['id'],
+				'id' => intval($_POST['id']),
 				'url' => get_home_url() . '/wp-admin/admin.php?page=autoquiz_upgrade_plan'
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/checkout_stripe.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/checkout_stripe.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true, 'url' => $response['url']));
@@ -260,10 +320,10 @@ if (!function_exists('ai_quiz_single_checkout')){
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
-				'price' => $_POST['price'],
-				'n_quizs' => $_POST['n_quizs']
+				'price' => floatval($_POST['price']),
+				'n_quizs' => intval($_POST['n_quizs'])
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/single-quizs-checkout.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/single-quizs-checkout.php", $data);
 			$response = json_decode($get_data, true);
 			if($response['exito']){
 				ai_quiz_return_json(array('exito' => true, 'clientSecret' => $response['clientSecret']));
@@ -285,7 +345,7 @@ if (!function_exists('ai_quiz_check_api_key')){
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key')
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/check_api_key.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/check_api_key.php", $data);
 			$response = json_decode($get_data, true);
 			
 			$success = $response['exito'];
@@ -301,16 +361,16 @@ if (!function_exists('ai_quiz_update_user_quizs')){
 			return false;
 		}else{
 			if(isset($_SERVER['HTTP_REFERER'])) {
-				$domain = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+				$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
 			} else {
-				$domain = parse_url(get_home_url(), PHP_URL_HOST);
+				$domain = str_replace('www.', '', parse_url(get_home_url(), PHP_URL_HOST));
 			}
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
 				'domain' => $domain
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/update_user_quizs.php", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/update_user_quizs.php", $data);
 			$response = json_decode($get_data, true);
 			$success = $response['exito'];
 			global $wpdb;
@@ -461,7 +521,7 @@ if (!function_exists('ai_quiz_get_posts')){
 			'email' => get_option('ai_quiz_email'),
 			'api_key' => get_option('ai_quiz_api_key')
 		);
-		$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/get_posts.php", $data);
+		$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/get_posts.php", $data);
 		$response = json_decode($get_data, true);
 		if(count($response['posts'])){
 			$all_posts = $response['posts'];
@@ -508,16 +568,16 @@ if (!function_exists('ai_quiz_get_quizs')){
 			$all_quizs = array();
 
 			if(isset($_SERVER['HTTP_REFERER'])) {
-				$domain = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+				$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
 			} else {
-				$domain = parse_url(get_home_url(), PHP_URL_HOST);
+				$domain = str_replace('www.', '', parse_url(get_home_url(), PHP_URL_HOST));
 			}
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
 				'domain' => $domain
 			);
-			$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/get_quizs.py", $data);
+			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/get_quizs.py", $data);
 			$response = json_decode($get_data, true);
 			global $wpdb;
 			$exams_table_name = $wpdb->prefix . 'ai_quizs';
@@ -658,7 +718,7 @@ if (!function_exists('ai_quiz_reset_style')){
 if (!function_exists('ai_quiz_create_by_post')){
 
 	function ai_quiz_create_by_post() {
-		$post_id = $_POST['id'];
+		$post_id = intval($_POST['id']);
 		// Obtener el contenido del post
 		$post_object = get_post( $post_id );
 		$post_content = $post_object->post_content;
@@ -674,11 +734,11 @@ if (!function_exists('ai_quiz_create_by_post')){
 			'text' => $post_text,
 			'title' => $post_title,
 			'type' => 'post',
-			'idiom' => $_POST['idiom'],
-			'domain' => parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
+			'idiom' => wp_strip_all_tags($_POST['idiom']),
+			'domain' => str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST))
 		);
 
-		$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/create_quiz.py", $data);
+		$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/create_quiz.py", $data);
 		$response = json_decode($get_data, true);
 		ai_quiz_return_json(array('exito' => true, 'response' => $response));
 	}
@@ -688,17 +748,29 @@ if (!function_exists('ai_quiz_create_by_post')){
 if (!function_exists('ai_quiz_create_by_custom')){
 
 	function ai_quiz_create_by_custom() {
-		$url = $_POST['url'];
-		$topic = $_POST['topic'];
-		$file = $_FILES['file'];
-		$type = $_POST['custom_type'];
-		if($type == "pdf"){
-			$name = $file['name'];
-		}else if ($type == "url"){
+		$url = isset($_POST['url']) ? sanitize_url($_POST['url']) : '';
+		$topic = isset($_POST['topic']) ? sanitize_text_field($_POST['topic']) : '';
+		$type = isset($_POST['custom_type']) ? sanitize_text_field($_POST['custom_type']) : '';
+		$idiom = isset($_POST['idiom']) ? sanitize_text_field($_POST['idiom']) : '';
+		
+
+		if ($type === "pdf") {
+			//Manejando file
+			$file = $_FILES['file'];
+
+			if ($file['error'] !== UPLOAD_ERR_OK) {
+				ai_quiz_return_json(array('exito' => false, 'error' => 'PDF Error, try again.'));
+			}
+			$name = sanitize_file_name($file['name']);
+		} else if ($type === "url") {
 			$name = $url;
-		}else if($type == "topic"){
+		} else if ($type === "topic") {
 			$name = $topic;
 		}
+	
+		$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
+		$domain = sanitize_text_field($domain);
+
 		$data = array(
 			'email' => get_option('ai_quiz_email'),
 			'api_key' => get_option('ai_quiz_api_key'),
@@ -706,26 +778,29 @@ if (!function_exists('ai_quiz_create_by_custom')){
 			'text' => $topic,
 			'title' => $name,
 			'type' => $type,
-			'idiom' => $_POST['idiom'],
-			'domain' => parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
+			'idiom' => $idiom,
+			'domain' => $domain
 		);
 		if ($type === 'pdf') {
-			$data['file'] = curl_file_create($file['tmp_name'], $file['type'], $file['name']);
+			//$data['file'] = curl_file_create($file['tmp_name'], $file['type'], $file['name']);
+			$data['file'] = $file;
 		}
+		//ai_quiz_return_json(array('exito' => false, 'error' => $data));
 
-		$get_data = AutoQuiz_callAPI('POST', "https://quiz.autowriter.tech/api/create_quiz.py", $data);
+		$get_data = ai_quiz_call_api2('POST', "https://quiz.autowriter.tech/api/create_quiz.py", $data);
 		$response = json_decode($get_data, true);
 		if($response!=null){
 			if(!$response['exito']){
 				ai_quiz_return_json(array('exito' => false, 'error' => $response['error']));
 			}
 		}else{
-			ai_quiz_return_json(array('exito' => false, 'error' => 'Could not extract text from your input, please try again.'));
+			ai_quiz_return_json(array('exito' => false, 'response' => $response, 'error' => 'Could not extract text from your input, please try again.'));
 		}
 		ai_quiz_return_json(array('exito' => true, 'response' => $response));
 	}
 	add_action( 'wp_ajax_ai_quiz_create_by_custom', 'ai_quiz_create_by_custom' );
 }
+
 if (!function_exists('ai_quiz_add_rewrite_rules')){
 	function ai_quiz_add_rewrite_rules() {
 		add_rewrite_rule('^ai-quiz/([0-9]+)/?', 'index.php?ai_quiz_id=$matches[1]', 'top');
@@ -765,7 +840,7 @@ if (!function_exists('ai_quiz_create_shortcode')){
         $output = "";
         if($quiz) {
             // Generamos el iframe que apunta a la url del cuestionario.
-            $output .= '<iframe src="'.home_url().'/ai-quiz/'.$id.'?parent_url='.urlencode($current_url).'" width="100%" height="800"></iframe>';
+            $output .= '<iframe src="'.home_url().'/ai-quiz/'.$id.'?parent_url='.urlencode($current_url).'" width="100%" height="800" style="border:0; padding-right:10px;"></iframe>';
         } else {
             $output .= "<p>Quiz no encontrado.</p>";
         }
@@ -777,16 +852,17 @@ if (!function_exists('ai_quiz_create_shortcode')){
 if (!function_exists('ai_quiz_create_shortcode_ajax')){
 	function ai_quiz_create_shortcode_ajax() {
 		// Obtenemos el ID del quiz desde el request de AJAX
-		$quiz_id = $_POST['id'];
+		$quiz_id = intval($_POST['id']);
 		
-		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        // Aquí puedes obtener la información del quiz a partir del ID
+		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . esc_url_raw($_SERVER['REQUEST_URI']);
+
+		// Aquí puedes obtener la información del quiz a partir del ID
         $quiz = ai_quiz_get_if_exist_quiz($quiz_id);
         // Suponiendo que quieres mostrar el nombre del quiz
         $output = "";
         if($quiz) {
             // Generamos el iframe que apunta a la url del cuestionario.
-            $output .= '<iframe src="'.home_url().'/ai-quiz/'.$quiz_id.'?parent_url='.urlencode($current_url).'" width="100%" height="800"></iframe>';
+            $output .= '<iframe src="' . esc_html(home_url()) . '/ai-quiz/' . esc_attr($quiz_id) . '?parent_url=' . esc_html(urlencode($current_url)) . '" width="100%" height="800" style="border:0; padding-right:10px;"></iframe>';
 		} else {
 			$output .= "<p>Quiz no encontrado.</p>";
 		}
@@ -826,18 +902,18 @@ if (!function_exists('ai_quiz_my_custom_colors')){
 		?>
 		<style type="text/css">
 			:root {
-				--ai_quiz_bg_color: <?php echo $ai_quiz_bg_color; ?>;
-				--ai_quiz_bg_font: <?php echo $ai_quiz_bg_font; ?>;
-				--ai_quiz_option_color: <?php echo $ai_quiz_option_color; ?>;
-				--ai_quiz_option_font: <?php echo $ai_quiz_option_font; ?>;
-				--ai_quiz_selected_option_color: <?php echo $ai_quiz_selected_option_color; ?>;
-				--ai_quiz_selected_option_font: <?php echo $ai_quiz_selected_option_font; ?>;
-				--ai_quiz_failed_option_color: <?php echo $ai_quiz_failed_option_color; ?>;
-				--ai_quiz_failed_option_font: <?php echo $ai_quiz_failed_option_font; ?>;
-				--ai_quiz_success_option_color: <?php echo $ai_quiz_success_option_color; ?>;
-				--ai_quiz_success_option_font: <?php echo $ai_quiz_success_option_font; ?>;
-				--ai_quiz_primary_color: <?php echo $ai_quiz_primary_color; ?>;
-				--ai_quiz_primary_font: <?php echo $ai_quiz_primary_font; ?>;
+				--ai_quiz_bg_color: <?php echo esc_attr($ai_quiz_bg_color); ?>;
+				--ai_quiz_bg_font: <?php echo esc_attr($ai_quiz_bg_font); ?>;
+				--ai_quiz_option_color: <?php echo esc_attr($ai_quiz_option_color); ?>;
+				--ai_quiz_option_font: <?php echo esc_attr($ai_quiz_option_font); ?>;
+				--ai_quiz_selected_option_color: <?php echo esc_attr($ai_quiz_selected_option_color); ?>;
+				--ai_quiz_selected_option_font: <?php echo esc_attr($ai_quiz_selected_option_font); ?>;
+				--ai_quiz_failed_option_color: <?php echo esc_attr($ai_quiz_failed_option_color); ?>;
+				--ai_quiz_failed_option_font: <?php echo esc_attr($ai_quiz_failed_option_font); ?>;
+				--ai_quiz_success_option_color: <?php echo esc_attr($ai_quiz_success_option_color); ?>;
+				--ai_quiz_success_option_font: <?php echo esc_attr($ai_quiz_success_option_font); ?>;
+				--ai_quiz_primary_color: <?php echo esc_attr($ai_quiz_primary_color); ?>;
+				--ai_quiz_primary_font: <?php echo esc_attr($ai_quiz_primary_font); ?>;
 			}
 		</style>
 		<?php

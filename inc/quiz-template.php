@@ -1,6 +1,6 @@
 <?php
 
-
+	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
     // Obtiene el ID del quiz de la URL
     $quiz_id = get_query_var('ai_quiz_id');
@@ -8,11 +8,13 @@
     // Obtiene la información del quiz a partir del ID
     $quiz = ai_quiz_get_quiz($quiz_id);
 
-	if(!isset($_GET['parent_url'])){
+	if (!isset($_GET['parent_url']) || !filter_var(sanitize_url($_GET['parent_url']), FILTER_VALIDATE_URL)) {
 		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-	}else{
-		$current_url = $_GET['parent_url'];
+		$current_url = esc_url($current_url); // Escape the URL when outputting it
+	} else {
+		$current_url = sanitize_url($_GET['parent_url']); // Sanitize the input
 	}
+	
 	$quiz['admin'] = current_user_can('administrator');
 	$quiz['url'] = $current_url;
 	$quiz['admin_ajax_url'] = admin_url( 'admin-ajax.php' );
@@ -31,7 +33,7 @@
 	// Enqueue the stylesheet
 	wp_enqueue_style('my-styles',trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css", null, $my_css_ver);
 	wp_enqueue_style('my-styles2', trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css", null, $my_css_bootstrap);
-	wp_enqueue_style('my-styles3',"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css",null,null);
+	wp_enqueue_style('my-styles3',trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",null,null);
 	
 	//Colors
 	$ai_quiz_bg_color = get_option('ai_quiz_bg_color');
@@ -57,18 +59,18 @@
 <head>
 	<style type="text/css">
 			:root {
-				--ai_quiz_bg_color: <?php echo $ai_quiz_bg_color; ?>;
-				--ai_quiz_bg_font: <?php echo $ai_quiz_bg_font; ?>;
-				--ai_quiz_option_color: <?php echo $ai_quiz_option_color; ?>;
-				--ai_quiz_option_font: <?php echo $ai_quiz_option_font; ?>;
-				--ai_quiz_selected_option_color: <?php echo $ai_quiz_selected_option_color; ?>;
-				--ai_quiz_selected_option_font: <?php echo $ai_quiz_selected_option_font; ?>;
-				--ai_quiz_failed_option_color: <?php echo $ai_quiz_failed_option_color; ?>;
-				--ai_quiz_failed_option_font: <?php echo $ai_quiz_failed_option_font; ?>;
-				--ai_quiz_success_option_color: <?php echo $ai_quiz_success_option_color; ?>;
-				--ai_quiz_success_option_font: <?php echo $ai_quiz_success_option_font; ?>;
-				--ai_quiz_primary_color: <?php echo $ai_quiz_primary_color; ?>;
-				--ai_quiz_primary_font: <?php echo $ai_quiz_primary_font; ?>;
+				--ai_quiz_bg_color: <?php echo esc_html($ai_quiz_bg_color); ?>;
+				--ai_quiz_bg_font: <?php echo esc_html($ai_quiz_bg_font); ?>;
+				--ai_quiz_option_color: <?php echo esc_html($ai_quiz_option_color); ?>;
+				--ai_quiz_option_font: <?php echo esc_html($ai_quiz_option_font); ?>;
+				--ai_quiz_selected_option_color: <?php echo esc_html($ai_quiz_selected_option_color); ?>;
+				--ai_quiz_selected_option_font: <?php echo esc_html($ai_quiz_selected_option_font); ?>;
+				--ai_quiz_failed_option_color: <?php echo esc_html($ai_quiz_failed_option_color); ?>;
+				--ai_quiz_failed_option_font: <?php echo esc_html($ai_quiz_failed_option_font); ?>;
+				--ai_quiz_success_option_color: <?php echo esc_html($ai_quiz_success_option_color); ?>;
+				--ai_quiz_success_option_font: <?php echo esc_html($ai_quiz_success_option_font); ?>;
+				--ai_quiz_primary_color: <?php echo esc_html($ai_quiz_primary_color); ?>;
+				--ai_quiz_primary_font: <?php echo esc_html($ai_quiz_primary_font); ?>;
 			}
 	</style>
     <?php
@@ -77,11 +79,11 @@
         wp_print_scripts();
     ?>
 </head>
-<body>
+<body class="px-2">
 <!-- Ahora puedes usar tu HTML aquí -->
     <!-- NOTA EMOJI -->
 	<div>
-		<h5 class="my-2 text-center"><?php echo get_option('ai_quiz_phrase'); ?></h5>
+		<h5 class="my-2 text-center"><?php echo esc_html(get_option('ai_quiz_phrase')); ?></h5>
 		<div class="align-items-start justify-content-center" id="face-score" >
 			<div id="ai-quiz-share"><i class="fa-solid fa-share-from-square"></i></div>
 			<form class="fr" action="">

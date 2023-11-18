@@ -101,13 +101,16 @@
 	color: var(--ai_quiz_bg_font);
     box-shadow: 1px 1px 4px #00000036;
 }
+.ai-quiz-question-title{
+	font-size: large;
+}
 .ai-quiz-option{
     border-radius: 3px;
     padding: 6px 16px;
     box-shadow: 1px 1px 4px #0000ff47;
     cursor: pointer;
     transition-duration: 0.4s;
-    font-size: large;
+    font-size: medium;
     background: var(--ai_quiz_option_color);
     color: var(--ai_quiz_option_font);
 }

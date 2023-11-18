@@ -164,7 +164,21 @@ AI Quiz use language model GPT-3 to create the quizs for you.
 All you have to do is choose the post you want to gamify.
 You can also create quizzes from a pdf, a url or simply a topic.
 
+This plugin utilizes external services to enhance its functionality:
 
+**Youtube**  
+Our plugin integrates with YouTube to provide rich media content, enhancing the user experience.
+
+External Service: https://www.youtube.com/
+YouTube Terms of Use: https://www.youtube.com/static?template=terms
+YouTube Privacy Policy: https://policies.google.com/privacy
+
+**Stripe**  
+For secure online payment processing, this plugin uses Stripe.
+
+External Service: https://stripe.com/
+YouTube Terms of Use: https://stripe.com/legal
+YouTube Privacy Policy: https://stripe.com/privacy
 
 = What I need to use AI Quiz Wordpress plugin? =
 

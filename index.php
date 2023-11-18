@@ -37,7 +37,12 @@
 
 
 // Plugin directory
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+/*
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
 
 define( 'ai_quiz_PLUGIN_DIR' , plugin_dir_path( __FILE__ ) );
 
@@ -80,7 +85,7 @@ function ai_quiz_notice(){
             <p>Thank you for using AutoQuiz! <strong>You are awesome</strong>.</p>
         </div>
         <script type="text/javascript">
-            window.location.href= "<?php echo get_admin_url(); ?>admin.php?page=ai_quiz"
+            window.location.href= "<?php echo esc_html(get_admin_url()); ?>admin.php?page=ai_quiz"
         </script>
         <?php
         /* Delete transient, only display this notice once. */
@@ -230,35 +235,8 @@ require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-head.php' );	// Insert code (hea
 
 
 
-
-
-
-
 require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-body.php' );	// Insert code (body)
 require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-body-video-academy.php' );	// Insert code (body)
 require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-body-buy-tokens.php' );	// Insert code (body)
 require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-body-style.php' );	// Insert code (body)
 require_once( ai_quiz_PLUGIN_DIR . '/inc/insert-body-settings.php' );	// Insert code (body)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

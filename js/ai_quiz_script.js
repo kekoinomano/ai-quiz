@@ -209,7 +209,7 @@ jQuery(document).ready(function ($) {
       texto = `
                   <div class="ai-quiz-question-card" id="ai-quiz-question-card" data-id=${question["id"]} data-arr=${index}>
             <div class="d-flex flex-column justify-content-center align-items-center">
-              <div class="mb-5 question-title">${question["question"]}</div>
+              <div class="mb-5 ai-quiz-question-title">${question["question"]}</div>
               <div class="ai-quiz-options-card flex-column justify-content-center align-items-center w-100 text-center">
           `;
       for (var j = 0; j < question["options"].length; j++) {
@@ -504,7 +504,7 @@ jQuery(document).ready(function ($) {
 		texto = `
 					<div class="ai-quiz-question-card" id="ai-quiz-question-card" data-id=${question["id"]} data-arr=${index}>
 			  <div class="d-flex flex-column justify-content-center align-items-center">
-				<textarea class="mb-5 question-title form-control">${question["question"]}</textarea>
+				<textarea class="mb-5 ai-quiz-question-title form-control">${question["question"]}</textarea>
 				<div class="ai-quiz-options-card flex-column justify-content-center align-items-center w-100 text-center">
 			`;
 		for (var j = 0; j < question["options"].length; j++) {

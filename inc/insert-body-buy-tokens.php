@@ -6,7 +6,7 @@ if (!function_exists('ai_quiz_add_integration_code_body_buy_tokens')) {
 
 	function ai_quiz_add_integration_code_body_buy_tokens()
 	{
-		$get_data = AutoQuiz_callAPI('GET', "https://quiz.autowriter.tech/api/get_prices.php", false);
+		$get_data = ai_quiz_call_api('GET', "https://quiz.autowriter.tech/api/get_prices.php", false);
 		$response = json_decode($get_data, true);
 		$prices = $response['response'];
 

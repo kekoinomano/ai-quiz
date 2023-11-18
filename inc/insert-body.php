@@ -47,7 +47,7 @@ if (!function_exists('ai_quiz_add_integration_code_body')) {
 
 				<button class="nav-link" style="border: 1px solid #5858ed;" data-bs-toggle="pill" type="button"
 					role="tab" aria-selected="false"
-					onclick="window.location.href= '<?php echo get_admin_url(); ?>admin.php?page=autoquiz_upgrade_plan';">Upgrade
+					onclick="window.location.href= '<?php echo esc_html(get_admin_url()); ?>admin.php?page=autoquiz_upgrade_plan';">Upgrade
 					Plan</button>
 
 
@@ -63,8 +63,8 @@ if (!function_exists('ai_quiz_add_integration_code_body')) {
 				<div id="ai-quiz-choose" class="text-center">
 					<h4 class="my-5">How do you want to create it?</h4>
 					<div class="d-flex flex-row align-items-center justify-content-evenly my-5">
-						<div class="ai-quiz-choose" id="ai-quiz-choose-post-btn"><img src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/post.png"><p>By Post</p></div>
-						<div class="ai-quiz-choose" id="ai-quiz-choose-custom-btn"><img src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/custom.png"><p>By Custom</p></div>
+						<div class="ai-quiz-choose" id="ai-quiz-choose-post-btn"><img src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/post.png"><p>By Post</p></div>
+						<div class="ai-quiz-choose" id="ai-quiz-choose-custom-btn"><img src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/custom.png"><p>By Custom</p></div>
 					</div>
 				</div>
 				<div id="ai-quiz-choose-post" class="text-center" style="display: none;">
@@ -88,9 +88,9 @@ if (!function_exists('ai_quiz_add_integration_code_body')) {
 					<div class="d-flex flex-row align-items-center ai-quiz-back-choose my-5" style="cursor:pointer;"><i class="fa fa-angle-left"></i><h5 class="mb-0 ms-3"> Create Quiz By Custom Input</h5></div>
 					<h5>Select your input type</h5>
 					<div class="d-flex flex-row align-items-center justify-content-evenly my-5">
-						<div class="ai-quiz-choose" id="ai-quiz-choose-pdf-btn"><img src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/pdf.png"><p>PDF</p></div>
-						<div class="ai-quiz-choose" id="ai-quiz-choose-url-btn"><img src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/url.png"><p>URL</p></div>
-						<div class="ai-quiz-choose" id="ai-quiz-choose-topic-btn"><img src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/topic.png"><p>Topic</p></div>
+						<div class="ai-quiz-choose" id="ai-quiz-choose-pdf-btn"><img src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/pdf.png"><p>PDF</p></div>
+						<div class="ai-quiz-choose" id="ai-quiz-choose-url-btn"><img src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/url.png"><p>URL</p></div>
+						<div class="ai-quiz-choose" id="ai-quiz-choose-topic-btn"><img src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/topic.png"><p>Topic</p></div>
 					</div>
 					<!--DROP FILE -->
 					<div id="ai-quiz-pdf-show" class=" align-items-center justify-content-center text-center flex-column" style="display: none;">

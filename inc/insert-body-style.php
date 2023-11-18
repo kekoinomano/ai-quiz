@@ -33,11 +33,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_bg_color">Background Color:</label>
-							<input id="ai_quiz_bg_color" type="color" value="<?php echo get_option('ai_quiz_bg_color'); ?>" style="border: none;">
+							<input id="ai_quiz_bg_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_bg_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_bg_font">Font Color:</label>
-							<input id="ai_quiz_bg_font" type="color" value="<?php echo get_option('ai_quiz_bg_font'); ?>" style="border: none;">
+							<input id="ai_quiz_bg_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_bg_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -52,11 +52,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_option_color">Background Color:</label>
-							<input id="ai_quiz_option_color" type="color" value="<?php echo get_option('ai_quiz_option_color'); ?>" style="border: none;">
+							<input id="ai_quiz_option_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_option_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_option_font">Font Color:</label>
-							<input id="ai_quiz_option_font" type="color" value="<?php echo get_option('ai_quiz_option_font'); ?>" style="border: none;">
+							<input id="ai_quiz_option_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_option_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -71,11 +71,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 					<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_option_color">Background Color:</label>
-							<input id="ai_quiz_selected_option_color" type="color" value="<?php echo get_option('ai_quiz_selected_option_color'); ?>" style="border: none;">
+							<input id="ai_quiz_selected_option_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_selected_option_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_selected_option_font">Font Color:</label>
-							<input id="ai_quiz_selected_option_font" type="color" value="<?php echo get_option('ai_quiz_selected_option_font'); ?>" style="border: none;">
+							<input id="ai_quiz_selected_option_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_selected_option_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -90,11 +90,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_failed_option_color">Background Color:</label>
-							<input id="ai_quiz_failed_option_color" type="color" value="<?php echo get_option('ai_quiz_failed_option_color'); ?>" style="border: none;">
+							<input id="ai_quiz_failed_option_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_failed_option_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_failed_option_font">Font Color:</label>
-							<input id="ai_quiz_failed_option_font" type="color" value="<?php echo get_option('ai_quiz_failed_option_font'); ?>" style="border: none;">
+							<input id="ai_quiz_failed_option_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_failed_option_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -109,11 +109,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_success_option_color">Background Color:</label>
-							<input id="ai_quiz_success_option_color" type="color" value="<?php echo get_option('ai_quiz_success_option_color'); ?>" style="border: none;">
+							<input id="ai_quiz_success_option_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_success_option_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_success_option_font">Font Color:</label>
-							<input id="ai_quiz_success_option_font" type="color" value="<?php echo get_option('ai_quiz_success_option_font'); ?>" style="border: none;">
+							<input id="ai_quiz_success_option_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_success_option_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -121,7 +121,7 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 			</div>
 			<div class="my-3">
 				<label class="my-3">Customize the phrase</label>
-				<input type="text" id="ai-quiz-phrase" class="form-control" value="<?php echo get_option('ai_quiz_phrase'); ?>">
+				<input type="text" id="ai-quiz-phrase" class="form-control" value="<?php echo esc_html(get_option('ai_quiz_phrase')); ?>">
 			</div>
 			<div class="accordion-item">
 				<h5 class="accordion-header" id="flush-heading6">
@@ -133,11 +133,11 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 					<div class="accordion-body">
 					<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_primary_color">Background Color:</label>
-							<input id="ai_quiz_primary_color" type="color" value="<?php echo get_option('ai_quiz_primary_color'); ?>" style="border: none;">
+							<input id="ai_quiz_primary_color" type="color" value="<?php echo esc_html(get_option('ai_quiz_primary_color')); ?>" style="border: none;">
 						</div>
 						<div class="d-flex flex-row align-items-center my-3">
 							<label class="me-3" for="ai_quiz_primary_font">Font Color:</label>
-							<input id="ai_quiz_primary_font" type="color" value="<?php echo get_option('ai_quiz_primary_font'); ?>" style="border: none;">
+							<input id="ai_quiz_primary_font" type="color" value="<?php echo esc_html(get_option('ai_quiz_primary_font')); ?>" style="border: none;">
 						</div>
 					</div>
 				</div>
@@ -149,7 +149,7 @@ if (!function_exists('ai_quiz_add_integration_code_body_style')) {
 		</div>
 
 		<div>
-			<h5 class="my-2 text-center"><?php echo get_option('ai_quiz_phrase'); ?></h5>
+			<h5 class="my-2 text-center"><?php echo esc_html(get_option('ai_quiz_phrase')); ?></h5>
 
 			<div class="d-flex justify-content-center align-items-center mb-4">
 				<div id="ai-quiz-pagination" class="ai-quiz-shortcode-scrollbar p-3 pt-0">

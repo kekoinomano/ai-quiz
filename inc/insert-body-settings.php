@@ -58,7 +58,7 @@ if (!function_exists('ai_quiz_add_integration_code_body_settings')) {
 					<!-- FREE PLAN-->
 					<div id="ai-free-plan" style="display:none">
 						<p style="font-size: inherit;">Subscription: Free Plan</p>
-						<a href='<?php echo get_admin_url(); ?>admin.php?page=autoquiz_upgrade_plan'
+						<a href='<?php echo esc_html(get_admin_url()); ?>admin.php?page=autoquiz_upgrade_plan'
 							class="btn btn-lg btn-primary my-4">Upgrade plan <i class="fa fa-rocket ms-2"></i></a>
 
 					</div>
@@ -74,7 +74,7 @@ if (!function_exists('ai_quiz_add_integration_code_body_settings')) {
 						<p style="font-size: inherit;"><b>Next payment:</b> <span
 								id="ai-subscription-next_payment"></span></p>
 						<div class="d-flex flex-column align-items-start">
-							<a href='<?php echo get_admin_url(); ?>admin.php?page=autoquiz_upgrade_plan'
+							<a href='<?php echo esc_html(get_admin_url()); ?>admin.php?page=autoquiz_upgrade_plan'
 								class="btn btn-lg btn-primary my-4">Change subscription <i
 									class="fa fa-rocket ms-2"></i></a>
 							<button class="btn btn-danger my-4" onclick="show_delete_subscription(this)"> Cancel
@@ -96,12 +96,12 @@ if (!function_exists('ai_quiz_add_integration_code_body_settings')) {
 					<h4 class="my-5">Personal Settings</h4>
 					
 					<p class="my-2">Email</p>
-					<input type="text" class="form-control mb-4 gpt3-title" value="<?php echo get_option("ai_quiz_email"); ?>" id="ai-email"
+					<input type="text" class="form-control mb-4 gpt3-title" value="<?php echo esc_html(get_option("ai_quiz_email")); ?>" id="ai-email"
 					placeholder="example@example.com" readonly></input>
 					
 					<p class="my-2">Api Key</p>
 					<div class="input-group mb-3">
-						<input type="password" class="form-control gpt3-title" value="<?php echo get_option("ai_quiz_api_key"); ?>" id="ai-api_key" readonly>
+						<input type="password" class="form-control gpt3-title" value="<?php echo esc_html(get_option("ai_quiz_api_key")); ?>" id="ai-api_key" readonly>
 						<div class="input-group-append">
 							<button id="show_hide" class="btn btn-outline-secondary" type="button"><i id="eye_icon" class="fa fa-eye" aria-hidden="true"></i></button>
 						</div>

@@ -90,7 +90,14 @@ jQuery(document).ready(function($) {
 			var btn = x;
 			var loader = document.getElementById('loader-email');
 			var err_html = document.getElementById("ai-quiz-error");
-			var api_key = document.getElementById("ai-quiz-api-key").value;
+			//var api_key = document.getElementById("ai-quiz-api-key").value;
+			var code = '';
+
+			$('.ai-quiz-input-validation').each(function() {
+				code += $(this).val();
+			});
+
+			code = parseInt(code, 10);
 
 
 			btn.style.display="none";
@@ -113,7 +120,7 @@ jQuery(document).ready(function($) {
 							type: 'post',
 							dataType: 'json',
 							data: {
-							  action: 'ai_quiz_update_api_key', api_key: api_key
+							  action: 'ai_quiz_update_api_key', api_key: consulta.api_key
 							},
 							success: function(data) {
 								window.location.reload();
@@ -129,10 +136,10 @@ jQuery(document).ready(function($) {
 					}
 				};
 				
-				xmlhttp.open("POST", "https://quiz.autowriter.tech/api/check_api_key.php", true);
+				xmlhttp.open("POST", "https://quiz.autowriter.tech/api/check_code.php", true);
 				
 				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xmlhttp.send("email=" + email + "&api_key=" + api_key);
+				xmlhttp.send("email=" + email + "&code=" + code);
 			}).catch(err => {
 				console.log(err);
 				err_html.innerHTML="Something went wrong";
@@ -305,4 +312,62 @@ jQuery(document).ready(function($) {
 		
 
 	});
+	let in1 = document.getElementById('otc-1'),
+		ins = document.querySelectorAll('.ai-quiz-input-validation')
+		if(ins.length > 0){
+			let splitNumber = function(e) {
+				let data = e.data || e.target.value; // Chrome doesn't get the e.data, it's always empty, fallback to value then.
+				if ( ! data ) return; // Shouldn't happen, just in case.
+				if ( data.length === 1 ) return; // Here is a normal behavior, not a paste action.
+				
+				popuNext(e.target, data);
+			}
+			let popuNext = function(el, data) {
+				el.value = data[0]; // Apply first item to first input
+				data = data.substring(1); // remove the first char.
+				if ( el.nextElementSibling && data.length ) {
+					// Do the same with the next element and next data
+					popuNext(el.nextElementSibling, data);
+				}
+			};
+
+			ins.forEach(function(input) {
+				input.addEventListener('keyup', function(e){
+					// Break if Shift, Tab, CMD, Option, Control.
+					if (e.keyCode === 16 || e.keyCode == 9 || e.keyCode == 224 || e.keyCode == 18 || e.keyCode == 17) {
+						return;
+					}
+					
+					// On Backspace or left arrow, go to the previous field.
+					if ( (e.keyCode === 8 || e.keyCode === 37) && this.previousElementSibling && this.previousElementSibling.tagName === "INPUT" ) {
+						this.previousElementSibling.select();
+					} else if (e.keyCode !== 8 && this.nextElementSibling) {
+						this.nextElementSibling.select();
+					}
+					
+					// If the target is populated to quickly, value length can be > 1
+					if ( e.target.value.length > 1 ) {
+						splitNumber(e);
+					}
+				});
+		
+				input.addEventListener('focus', function(e) {
+					// If the focus element is the first one, do nothing
+					if ( this === in1 ) return;
+					
+					// If value of input 1 is empty, focus it.
+					if ( in1.value == '' ) {
+						in1.focus();
+					}
+					
+					// If value of a previous input is empty, focus it.
+					// To remove if you don't wanna force user respecting the fields order.
+					if ( this.previousElementSibling.value == '' ) {
+						this.previousElementSibling.focus();
+					}
+				});
+			});
+
+			in1.addEventListener('input', splitNumber);
+		}
 });

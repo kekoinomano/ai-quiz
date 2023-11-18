@@ -11,7 +11,7 @@ if (!function_exists('ai_quiz_add_integration_code_header')) {
 
 <div class="wrap">
 	<div class="d-flex w-100 justify-content-center">
-		<img class="AutoQuiz-banner" src="<?php echo ai_quiz_PLUGIN_URL; ?>/images/banner-772x250.png">
+		<img class="AutoQuiz-banner" src="<?php echo esc_html(ai_quiz_PLUGIN_URL); ?>/images/banner-772x250.png">
 	</div>
 </div>
 
@@ -35,7 +35,7 @@ if(ai_quiz_check_api_key()){
 		</p>
 		<div class="d-flex justify-content-end">
 			<a class="btn btn-primary m-3"
-				href="<?php echo get_admin_url(); ?>admin.php?page=autoquiz_upgrade_plan">Get free posts
+				href="<?php echo esc_html(get_admin_url()); ?>admin.php?page=autoquiz_upgrade_plan">Get free posts
 			</a>
 		</div>
 
@@ -49,7 +49,7 @@ if(ai_quiz_check_api_key()){
 
 		</div>
 
-		<a class="ps-3 blue-color clickable" href="<?php echo get_admin_url(); ?>admin.php?page=autoquiz_upgrade_plan"><span
+		<a class="ps-3 blue-color clickable" href="<?php echo esc_html(get_admin_url()); ?>admin.php?page=autoquiz_upgrade_plan"><span
 				class="fa fa-question-circle" style="font-size: 1.2rem;"></span></a>
 	</div>
 

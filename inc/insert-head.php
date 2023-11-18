@@ -1,5 +1,5 @@
 <?php
-
+ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 
 
@@ -73,11 +73,11 @@ if (!function_exists('ai_quiz_add_my_admin_menus')) {
 
 
 
-		add_action('load-' . $my_page, 'load_admin_ai_quiz_body_js');
-		add_action('load-' . $my_page2, 'load_admin_ai_quiz_tokens_js');
-		add_action('load-' . $my_page4, 'load_admin_ai_quiz_style_js');
-		add_action('load-' . $my_page3, 'load_admin_ai_quiz_academy_js');
-		add_action('load-' . $my_page5, 'load_admin_ai_quiz_settings_js');
+		add_action('load-' . $my_page, 'ai_quiz_load_admin_ai_quiz_body_js');
+		add_action('load-' . $my_page2, 'ai_quiz_load_admin_ai_quiz_tokens_js');
+		add_action('load-' . $my_page4, 'ai_quiz_load_admin_ai_quiz_style_js');
+		add_action('load-' . $my_page3, 'ai_quiz_load_admin_ai_quiz_academy_js');
+		add_action('load-' . $my_page5, 'ai_quiz_load_admin_ai_quiz_settings_js');
 	}
 
 
@@ -94,10 +94,10 @@ if (!function_exists('ai_quiz_add_my_admin_menus')) {
 }
 
 
-if (!function_exists('load_admin_ai_quiz_body_js')) {
+if (!function_exists('ai_quiz_load_admin_ai_quiz_body_js')) {
 	// This function is only called when our plugin's page loads!
 
-	function load_admin_ai_quiz_body_js()
+	function ai_quiz_load_admin_ai_quiz_body_js()
 	{
 
 		// Unfortunately we can't just enqueue our scripts here - it's too early. So register against the proper action hook to do it
@@ -106,10 +106,10 @@ if (!function_exists('load_admin_ai_quiz_body_js')) {
 	}
 }
 
-if (!function_exists('load_admin_ai_quiz_tokens_js')) {
+if (!function_exists('ai_quiz_load_admin_ai_quiz_tokens_js')) {
 	// This function is only called when our plugin's page loads!
 
-	function load_admin_ai_quiz_tokens_js()
+	function ai_quiz_load_admin_ai_quiz_tokens_js()
 	{
 
 		// Unfortunately we can't just enqueue our scripts here - it's too early. So register against the proper action hook to do it
@@ -118,10 +118,10 @@ if (!function_exists('load_admin_ai_quiz_tokens_js')) {
 	}
 }
 
-if (!function_exists('load_admin_ai_quiz_style_js')) {
+if (!function_exists('ai_quiz_load_admin_ai_quiz_style_js')) {
 	// This function is only called when our plugin's page loads!
 
-	function load_admin_ai_quiz_style_js()
+	function ai_quiz_load_admin_ai_quiz_style_js()
 	{
 
 		// Unfortunately we can't just enqueue our scripts here - it's too early. So register against the proper action hook to do it
@@ -129,10 +129,10 @@ if (!function_exists('load_admin_ai_quiz_style_js')) {
 		add_action('admin_enqueue_scripts', 'ai_quiz_style_enqueue_js');
 	}
 }
-if (!function_exists('load_admin_ai_quiz_settings_js')) {
+if (!function_exists('ai_quiz_load_admin_ai_quiz_settings_js')) {
 	// This function is only called when our plugin's page loads!
 
-	function load_admin_ai_quiz_settings_js()
+	function ai_quiz_load_admin_ai_quiz_settings_js()
 	{
 
 		// Unfortunately we can't just enqueue our scripts here - it's too early. So register against the proper action hook to do it
@@ -140,10 +140,10 @@ if (!function_exists('load_admin_ai_quiz_settings_js')) {
 		add_action('admin_enqueue_scripts', 'ai_quiz_settings_enqueue_js');
 	}
 }
-if (!function_exists('load_admin_ai_quiz_academy_js')) {
+if (!function_exists('ai_quiz_load_admin_ai_quiz_academy_js')) {
 	// This function is only called when our plugin's page loads!
 
-	function load_admin_ai_quiz_academy_js()
+	function ai_quiz_load_admin_ai_quiz_academy_js()
 	{
 
 		// Unfortunately we can't just enqueue our scripts here - it's too early. So register against the proper action hook to do it
@@ -170,7 +170,7 @@ if (!function_exists('ai_quiz_enqueue_css_review')) {
 
 		wp_enqueue_style(
 
-			'my-styles-ai-review',
+			'ai-quiz-my-styles-ai-review',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles-review.css",
 
@@ -181,7 +181,7 @@ if (!function_exists('ai_quiz_enqueue_css_review')) {
 		);
 		wp_enqueue_script(
 
-			'my-js-ai-review',
+			'ai-quiz-my-js-ai-review',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/review.js",
 
@@ -220,7 +220,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 		// Enqueue the stylesheet
 		wp_enqueue_style(
 
-			'my-styles',
+			'ai-quiz-my-styles',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css",
 
@@ -233,7 +233,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles2',
+			'ai-quiz-my-styles2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css",
 
@@ -245,9 +245,9 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles3',
+			'ai-quiz-my-styles3',
 
-			"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css",
+			trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",
 
 			null,
 
@@ -263,7 +263,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions2',
+			'ai-quiz-my-functions2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/bootstrap.bundle.min.js",
 
@@ -277,7 +277,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-header',
+			'ai-quiz-my-functions-header',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/header.js",
 
@@ -294,7 +294,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions4',
+			'ai-quiz-my-functions4',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/main.js",
 
@@ -311,7 +311,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 		$my_css_datatable = gmdate('Ymd-Gis', filemtime(ai_quiz_PLUGIN_DIR . 'css/datatable.min.css'));
 		wp_enqueue_style(
 
-			'my-styles-datatable',
+			'ai-quiz-my-styles-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/datatable.min.css",
 
@@ -325,7 +325,7 @@ if (!function_exists('ai_quiz_body_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-datatable',
+			'ai-quiz-my-functions-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/datatable.min.js",
 
@@ -369,7 +369,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 		// Enqueue the stylesheet
 		wp_enqueue_style(
 
-			'my-styles',
+			'ai-quiz-my-styles',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css",
 
@@ -382,7 +382,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles2',
+			'ai-quiz-my-styles2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css",
 
@@ -394,7 +394,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles-checkout',
+			'ai-quiz-my-styles-checkout',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/checkout.css",
 
@@ -406,9 +406,9 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles3',
+			'ai-quiz-my-styles3',
 
-			"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
+			trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",
 
 			null,
 
@@ -425,7 +425,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions2',
+			'ai-quiz-my-functions2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/bootstrap.bundle.min.js",
 
@@ -440,7 +440,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-header',
+			'ai-quiz-my-functions-header',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/header.js",
 
@@ -454,7 +454,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-checkout',
+			'ai-quiz-my-functions-checkout',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/checkout.js",
 
@@ -469,7 +469,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-strype',
+			'ai-quiz-my-strype',
 
 			"https://js.stripe.com/v3/",
 
@@ -483,7 +483,7 @@ if (!function_exists('ai_quiz_tokens_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-checkout2',
+			'ai-quiz-my-functions-checkout2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/single-posts-checkout.js",
 
@@ -524,7 +524,7 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 		// Enqueue the stylesheet
 		wp_enqueue_style(
 
-			'my-styles',
+			'ai-quiz-my-styles',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css",
 
@@ -536,7 +536,7 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles1',
+			'ai-quiz-my-styles1',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/checkout.css",
 
@@ -548,7 +548,7 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles2',
+			'ai-quiz-my-styles2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css",
 
@@ -560,9 +560,9 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles3',
+			'ai-quiz-my-styles3',
 
-			"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
+			trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",
 
 			null,
 
@@ -577,7 +577,7 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions2',
+			'ai-quiz-my-functions2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/bootstrap.bundle.min.js",
 
@@ -592,7 +592,7 @@ if (!function_exists('ai_quiz_academy_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-header',
+			'ai-quiz-my-functions-header',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/header.js",
 
@@ -632,7 +632,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 		// Enqueue the stylesheet
 		wp_enqueue_style(
 
-			'my-styles',
+			'ai-quiz-my-styles',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css",
 
@@ -645,7 +645,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles2',
+			'ai-quiz-my-styles2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css",
 
@@ -657,9 +657,9 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles3',
+			'ai-quiz-my-styles3',
 
-			"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css",
+			trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",
 
 			null,
 
@@ -673,7 +673,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions2',
+			'ai-quiz-my-functions2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/bootstrap.bundle.min.js",
 
@@ -687,7 +687,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-header',
+			'ai-quiz-my-functions-header',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/header.js",
 
@@ -703,7 +703,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions4',
+			'ai-quiz-my-functions4',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/style.js",
 
@@ -840,7 +840,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 			"url" => "/wp-admin/admin-ajax.php",
 			"admin_ajax_url" => "/wp-admin/admin-ajax.php"
 		);
-		wp_localize_script('my-functions4', 'aiQuiz', $data);
+		wp_localize_script('ai-quiz-my-functions4', 'aiQuiz', $data);
 		wp_enqueue_style('ai_quiz_style', trailingslashit(ai_quiz_PLUGIN_URL) . "css/ai_quiz_style.css");
 
 		//Colors
@@ -884,7 +884,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 		$my_css_datatable = gmdate('Ymd-Gis', filemtime(ai_quiz_PLUGIN_DIR . 'css/datatable.min.css'));
 		wp_enqueue_style(
 
-			'my-styles-datatable',
+			'ai-quiz-my-styles-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/datatable.min.css",
 
@@ -898,7 +898,7 @@ if (!function_exists('ai_quiz_style_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-datatable',
+			'ai-quiz-my-functions-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/datatable.min.js",
 
@@ -938,7 +938,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 		// Enqueue the stylesheet
 		wp_enqueue_style(
 
-			'my-styles',
+			'ai-quiz-my-styles',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/my-styles.css",
 
@@ -951,7 +951,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles2',
+			'ai-quiz-my-styles2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/bootstrap.min.css",
 
@@ -963,9 +963,9 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_style(
 
-			'my-styles3',
+			'ai-quiz-my-styles3',
 
-			"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css",
+			trailingslashit(ai_quiz_PLUGIN_URL) . "css/font-awesome.min.css",
 
 			null,
 
@@ -978,7 +978,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions2',
+			'ai-quiz-my-functions2',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/bootstrap.bundle.min.js",
 
@@ -992,7 +992,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-header',
+			'ai-quiz-my-functions-header',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/header.js",
 
@@ -1008,7 +1008,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions4',
+			'ai-quiz-my-functions4',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/settings.js",
 
@@ -1025,7 +1025,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 		$my_css_datatable = gmdate('Ymd-Gis', filemtime(ai_quiz_PLUGIN_DIR . 'css/datatable.min.css'));
 		wp_enqueue_style(
 
-			'my-styles-datatable',
+			'ai-quiz-my-styles-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "css/datatable.min.css",
 
@@ -1039,7 +1039,7 @@ if (!function_exists('ai_quiz_settings_enqueue_js')) {
 
 		wp_enqueue_script(
 
-			'my-functions-datatable',
+			'ai-quiz-my-functions-datatable',
 
 			trailingslashit(ai_quiz_PLUGIN_URL) . "js/datatable.min.js",
 
@@ -1084,7 +1084,7 @@ function ai_quiz_solicitud_review() {
     // Coloca aquí el HTML de tu notificación.
     echo '<div id="ai_quiz-review-notice" class="notice notice-info ai_quiz-notice" data-purpose="review">
         <div class="ai_quiz-notice-thumbnail">
-            <img src="' . ai_quiz_PLUGIN_URL . '/images/icon-256x256.gif" alt="">
+            <img src="' . esc_html(ai_quiz_PLUGIN_URL) . '/images/icon-256x256.gif" alt="">
         </div>
         <div class="ai_quiz-notice-text">
             <div class="ai_quiz-notice-header">
@@ -1097,10 +1097,10 @@ function ai_quiz_solicitud_review() {
 			Plus, it keeps our <strong>free support</strong> running, kind of like having your own team of AI nerds on call. And all this in return for your feedback. </br> Sweet deal, right?</p>
             <div class="ai_quiz-notice-links">
                 <ul class="ai_quiz-notice-ul">
-                    <li><a class="button button-primary" href="' . $url . '" target="_blank"><span class="dashicons dashicons-external"></span>Sure, I\'d love to!</a></li>
+                    <li><a class="button button-primary" href="' . esc_html($url) . '" target="_blank"><span class="dashicons dashicons-external"></span>Sure, I\'d love to!</a></li>
                     <li><a href="#" class="button button-secondary notice-dismiss-permanently ai-quiz-notice-dismiss-permanently"><span class="dashicons dashicons-smiley"></span>I already did!</a></li>
                     <li><a href="#" class="button button-secondary notice-dismiss-temporarily ai-quiz-notice-dismiss-temporarily"><span class="dashicons dashicons-dismiss"></span>Maybe later</a></li>
-                                        <li><a href="' . $url_support . '" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span>I have a query</a></li>
+                                        <li><a href="' . esc_html($url_support) . '" class="button button-secondary notice-have-query" target="_blank"><span class="dashicons dashicons-testimonial"></span>I have a query</a></li>
                 </ul>
                 <a href="#" class="notice-dismiss-permanently ai-quiz-notice-dismiss-permanently">Never show again</a>
             </div>
