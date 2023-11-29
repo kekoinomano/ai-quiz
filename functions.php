@@ -192,7 +192,7 @@ if (!function_exists('ai_quiz_get_promo')){
 			$data = array(
 				'email' => get_option('ai_quiz_email'),
 				'api_key' => get_option('ai_quiz_api_key'),
-				'promo' => sanitize_text_field(wp_strip_all_tags($_POST['promo']))
+				'promo' => sanitize_text_field($_POST['promo'])
 			);
 			$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/promotion.php", $data);
 			$response = json_decode($get_data, true);
@@ -361,7 +361,7 @@ if (!function_exists('ai_quiz_update_user_quizs')){
 			return false;
 		}else{
 			if(isset($_SERVER['HTTP_REFERER'])) {
-				$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
+				$domain = str_replace('www.', '', parse_url(filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) ? $_SERVER['HTTP_REFERER'] : '', PHP_URL_HOST));
 			} else {
 				$domain = str_replace('www.', '', parse_url(get_home_url(), PHP_URL_HOST));
 			}
@@ -439,7 +439,7 @@ if (!function_exists('ai_quiz_update_email')) {
 
 			ai_quiz_return_json(array('exito' => false, 'error' => 'Mensaje vacío'));
 		}
-		$email = sanitize_text_field(wp_strip_all_tags($_POST['email']));
+		$email = sanitize_email($_POST['email']);
 		update_option('ai_quiz_email', sanitize_text_field($email));
 
 		ai_quiz_return_json(array('exito' => true));
@@ -483,7 +483,7 @@ if (!function_exists('ai_quiz_update_api_key')) {
 
 			ai_quiz_return_json(array('exito' => false, 'error' => 'Mensaje vacío'));
 		}
-		$api_key = sanitize_text_field(wp_strip_all_tags($_POST['api_key']));
+		$api_key = sanitize_text_field($_POST['api_key']);
 		update_option('ai_quiz_api_key', $api_key);
 		
 		ai_quiz_return_json(array('exito' => true));
@@ -500,10 +500,10 @@ if (!function_exists('ai_quiz_update_email_api_key')) {
 
 			ai_quiz_return_json(array('exito' => false, 'error' => 'Mensaje vacío'));
 		}
-		$api_key = sanitize_text_field(wp_strip_all_tags($_POST['api_key']));
+		$api_key = sanitize_text_field($_POST['api_key']);
 		update_option('ai_quiz_api_key', $api_key);
 
-		$email = sanitize_text_field(wp_strip_all_tags($_POST['email']));
+		$email = sanitize_email($_POST['email']);
 		update_option('ai_quiz_email', $email);
 		
 		ai_quiz_return_json(array('exito' => true));
@@ -568,7 +568,7 @@ if (!function_exists('ai_quiz_get_quizs')){
 			$all_quizs = array();
 
 			if(isset($_SERVER['HTTP_REFERER'])) {
-				$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
+				$domain = str_replace('www.', '', parse_url(filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) ? $_SERVER['HTTP_REFERER'] : '', PHP_URL_HOST));
 			} else {
 				$domain = str_replace('www.', '', parse_url(get_home_url(), PHP_URL_HOST));
 			}
@@ -734,8 +734,8 @@ if (!function_exists('ai_quiz_create_by_post')){
 			'text' => $post_text,
 			'title' => $post_title,
 			'type' => 'post',
-			'idiom' => wp_strip_all_tags($_POST['idiom']),
-			'domain' => str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST))
+			'idiom' => sanitize_text_field($_POST['idiom']),
+			'domain' => str_replace('www.', '', parse_url(filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) ? $_SERVER['HTTP_REFERER'] : '', PHP_URL_HOST))
 		);
 
 		$get_data = ai_quiz_call_api('POST', "https://quiz.autowriter.tech/api/create_quiz.py", $data);
@@ -768,7 +768,7 @@ if (!function_exists('ai_quiz_create_by_custom')){
 			$name = $topic;
 		}
 	
-		$domain = str_replace('www.', '', parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST));
+		$domain = str_replace('www.', '', parse_url(filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) ? $_SERVER['HTTP_REFERER'] : '', PHP_URL_HOST));
 		$domain = sanitize_text_field($domain);
 
 		$data = array(
@@ -833,7 +833,8 @@ if (!function_exists('ai_quiz_create_shortcode')){
             'id' => 'default'
         ), $atts));
         
-		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . esc_url_raw($_SERVER['HTTP_HOST']) . esc_url_raw($_SERVER['REQUEST_URI']);
+
         // Aquí puedes obtener la información del quiz a partir del ID
         $quiz = ai_quiz_get_if_exist_quiz($id);
         // Suponiendo que quieres mostrar el nombre del quiz
@@ -851,28 +852,23 @@ if (!function_exists('ai_quiz_create_shortcode')){
 }
 if (!function_exists('ai_quiz_create_shortcode_ajax')){
 	function ai_quiz_create_shortcode_ajax() {
-		// Obtenemos el ID del quiz desde el request de AJAX
 		$quiz_id = intval($_POST['id']);
-		
-		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . esc_url_raw($_SERVER['REQUEST_URI']);
-
-		// Aquí puedes obtener la información del quiz a partir del ID
-        $quiz = ai_quiz_get_if_exist_quiz($quiz_id);
-        // Suponiendo que quieres mostrar el nombre del quiz
-        $output = "";
-        if($quiz) {
-            // Generamos el iframe que apunta a la url del cuestionario.
-            $output .= '<iframe src="' . esc_html(home_url()) . '/ai-quiz/' . esc_attr($quiz_id) . '?parent_url=' . esc_html(urlencode($current_url)) . '" width="100%" height="800" style="border:0; padding-right:10px;"></iframe>';
+		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . esc_url_raw($_SERVER['REQUEST_URI']);
+	
+		$quiz = ai_quiz_get_if_exist_quiz($quiz_id);
+		$output = "";
+		if ($quiz) {
+			// Asegúrate de escapar todos los datos al imprimirlos
+			$iframe_src = esc_url(home_url() . '/ai-quiz/' . $quiz_id . '?parent_url=' . urlencode($current_url));
+			$output .= '<iframe src="' . $iframe_src . '" width="100%" height="800" style="border:0; padding-right:10px;"></iframe>';
 		} else {
-			$output .= "<p>Quiz no encontrado.</p>";
+			$output .= esc_html("<p>Quiz no encontrado.</p>");
 		}
-
-		// Retornamos la respuesta
+	
 		echo $output;
-
-		// Siempre debes terminar con die() en la función AJAX de WordPress
 		die();
 	}
+	
 	// Esta acción manejará la llamada AJAX
 	add_action('wp_ajax_ai_quiz_create_shortcode_ajax', 'ai_quiz_create_shortcode_ajax');
 	add_action('wp_ajax_nopriv_ai_quiz_create_shortcode_ajax', 'ai_quiz_create_shortcode_ajax');

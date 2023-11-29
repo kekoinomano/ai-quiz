@@ -9,7 +9,8 @@
     $quiz = ai_quiz_get_quiz($quiz_id);
 
 	if (!isset($_GET['parent_url']) || !filter_var(sanitize_url($_GET['parent_url']), FILTER_VALIDATE_URL)) {
-		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . esc_url_raw($_SERVER['HTTP_HOST']) . esc_url_raw($_SERVER['REQUEST_URI']);
+
 		$current_url = esc_url($current_url); // Escape the URL when outputting it
 	} else {
 		$current_url = sanitize_url($_GET['parent_url']); // Sanitize the input
